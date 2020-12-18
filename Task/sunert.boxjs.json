@@ -14,27 +14,109 @@
         "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js"
     },
     {
-        "id": "youth",
-        "name": "中青看点",
-        "keys": ["youthheader_zq", "read_zq", "red_zq", "readtime_zq"],
-        "author": "@sunert",
-        "settings": [{
-            "id": "notifytimes",
-            "name": "通知频率 (点击查看设置说明)",
-            "val": "",
-            "type": "number",
-            "desc": "设定通知频率，前三次为全部通知，之后转盘次数/设定频率整除时通知，如设置0为无通知，设置1为全部通知，设置其他数可整除余0时通知，默认值50"
-        },
+      "id": "youth",
+      "name": "中青看点",
+      "keys": ["youthheader_zq", "read_zq", "red_zq", "readtime_zq", "youthheader_zq2", "read_zq2", "red_zq2", "readtime_zq2", "youthheader_zq3", "read_zq3", "red_zq3", "readtime_zq3"],
+      "author": "@sunert",
+      "settings": [
         {
-            "id": "zqlogs",
-            "name": "调试日志",
-            "val": false,
-            "type": "boolean",
-            "desc": "调试日志开关，默认关闭"
-        }],
-        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
-        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"],
-        "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js"
+         "id": "notifytimes",
+         "name": "通知频率 (点击查看设置说明)",
+         "val": "",
+         "type": "number",
+         "desc": "设定通知频率，前三次为全部通知，之后转盘次数/设定频率整除时通知，如设置0为无通知，设置1为全部通知，设置其他数可整除余0时通知，默认值50"
+         },
+         {
+          "id": "zqlogs",
+          "name": "调试日志",
+          "val": false,
+          "type": "boolean",
+          "desc": "调试日志开关，默认关闭"
+         }, {
+           "id": "readMode",
+           "name": "阅读模式：保存设置后，在NE工具中执行脚本方见结果",
+           "val": "0",
+           "type": "radios",
+           "items": [{
+               "key": "0",
+               "label": "循环阅读：允许最小间隔21秒调用一次阅读接口"
+             },
+             {
+               "key": "1",
+               "label": "去重排序：移除重复数据并将视频数据往前排，以此优化循环阅读效率"
+             },
+             {
+               "key": "2",
+               "label": "重置标识：重置后切换为去重排序模式"
+             },
+             {
+               "key": "3",
+               "label": "备份阅读数据：执行脚本将数据以log形式打印出来"
+             }
+           ]
+         }, {
+           "id": "zqReadScheme",
+           "name": "阅读数据备份输出格式",
+           "val": "DF",
+           "type": "radios",
+           "items": [{
+               "key": "QX",
+               "label": "QX持久化数据代码"
+             },
+             {
+               "key": "LS",
+               "label": "Loon&Surge持久化数据代码"
+             },
+             {
+               "key": "GA",
+               "label": "Github Actions使用的以&分隔数据"
+             },
+             {
+               "key": "DF",
+               "label": "Default"
+             }
+           ]
+         }, {
+           "id": "zqSuffix",
+           "name": "抓包账号",
+           "val": "1",
+           "type": "number",
+           "desc": "指定抓取的数据包用于哪个账号，设置数值如：1、2、3..."
+         }, {
+           "id": "zqCount",
+           "name": "阅读账号数",
+           "val": "1",
+           "type": "number",
+           "desc": "设置阅读任务执行几个账号，根据抓包账号最大值设置即可将执行所有阅读账号任务"
+         }, {
+           "id": "read_count",
+           "name": "账号1总阅读数",
+           "val": "0",
+           "type": "number",
+           "desc": "账号1阅读数据总行数"
+         }, {
+           "id": "read_count2",
+           "name": "账号2总阅读数",
+           "val": "0",
+           "type": "number",
+           "desc": "账号2阅读数据总行数"
+         }, {
+           "id": "read_count3",
+           "name": "账号3总阅读数",
+           "val": "0",
+           "type": "number",
+           "desc": "账号3阅读数据总行数"
+         }
+       ],
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"],
+      "script": "https://raw.githubusercontent.com/ztxtop/Sunert.Scripts/master/Task/youth.js",
+      "scripts":[
+        {
+          "name" : "中青自动阅读",
+          "script" : "https://raw.githubusercontent.com/ztxtop/Sunert.Scripts/master/Task/zqread.js"
+        }
+      ]
     },
     {
         "id": "youthGain",

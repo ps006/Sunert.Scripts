@@ -63,6 +63,7 @@ hostname = *.youth.cn, ios.baertt.com
 
 let s = 200 //各数据接口延迟
 const $ = new Env("中青看点")
+$.oldName = $.name;
 let notifyInterval = $.getdata("notifytimes")||50 //通知间隔，默认抽奖每50次通知一次，如需关闭全部通知请设为0
 const YOUTH_HOST = "https://kd.youth.cn/WebApi/";
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -125,22 +126,27 @@ if ($.isNode()) {
       console.log(`============ 脚本执行-国际标准时间(UTC)：${new Date().toLocaleString()}  =============\n`)
       console.log(`============ 脚本执行-北京时间(UTC+8)：${new Date(new Date().getTime() + 8 * 60 * 60 * 1000).toLocaleString()}  =============\n`)
     } else {
-    cookiesArr.push($.getdata('youthheader_zq'));
-    redpArr.push($.getdata('red_zq'));
-    readArr.push($.getdata('read_zq'));
-    timeArr.push($.getdata('readtime_zq'));
+    $.zqCount = ($.zqCount = ($.getval('zqCount') || '0') - 0) - 1 > 0 ? $.zqCount : 1; // 执行任务的账号个数
+    for (let index = 0; index < $.zqCount; index++) {
+        let idx = index ? (index + 1 + '') : '';
+        cookiesArr.push($.getdata(`youthheader_zq${idx}`));
+        redpArr.push($.getdata(`red_zq${idx}`));
+        readArr.push($.getdata(`read_zq${idx}`));
+        timeArr.push($.getdata(`readtime_zq${idx}`));
+    }
 }
 
 const firstcheck = $.getdata('signt');
 const runtimes = $.getdata('times');
 const opboxtime = $.getdata('opbox');
 
-if (isGetCookie = typeof $request !== 'undefined') {
-   GetCookie();
-   $.done()
-} 
-
  !(async () => {
+  if (typeof $request !== 'undefined') {
+    $.idx = ($.idx = ($.getval('zqSuffix') || '0') - 0) - 1 > 0 ? $.idx : 1; // 账号扩展字符
+    $.name = $.oldName + $.idx;
+    GetCookie();
+    return;
+  }
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取中青看点一cookie')
     return;
@@ -153,6 +159,9 @@ if (isGetCookie = typeof $request !== 'undefined') {
       redpbodyVal = redpArr[i];
       $.index = i + 1;
       console.log(`-------------------------\n\n开始【中青看点${$.index}】`)
+      $.name = $.oldName + $.index;
+    } else {
+        continue;
     }
   await sign();
   await signInfo();
@@ -209,32 +218,35 @@ if (rotaryres.status !== 0&&rotaryres.data.doubleNum !== 0){
  }
 })()
   .catch((e) => $.logErr(e))
-  .finally(() => $.done())
+  .finally(() => {
+    $.name = $.oldName;
+    $.done();
+  })
 
 
 function GetCookie() {
    if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/TaskCenter\/(sign|getSign)/)) {
    const signheaderVal = JSON.stringify($request.headers)
-    if (signheaderVal)        $.setdata(signheaderVal,'youthheader_zq')
-    $.log(`${$.name} 获取Cookie: 成功,signheaderVal: ${signheaderVal}`)
+    if (signheaderVal)        $.setdata(signheaderVal,`youthheader_zq${$.idx>1?$.idx+'':''}`)
+    $.log(`${$.name} 获取Cookie: 成功,youthheader_zq${$.idx>1?$.idx+'':''}: ${signheaderVal}`)
     $.msg($.name, `获取Cookie: 成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/article\/complete/)) {
    const articlebodyVal = $request.body
-    if (articlebodyVal)        $.setdata(articlebodyVal,'read_zq')
-    $.log(`${$.name} 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
+    if (articlebodyVal)        $.setdata(articlebodyVal,`read_zq${$.idx>1?$.idx+'':''}`)
+    $.log(`${$.name} 获取阅读: 成功,read_zq${$.idx>1?$.idx+'':''}: ${articlebodyVal}`)
     $.msg($.name, `获取阅读请求: 成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
-    if (timebodyVal)        $.setdata(timebodyVal,'readtime_zq')
-    $.log(`${$.name} 获取阅读: 成功,timebodyVal: ${timebodyVal}`)
+    if (timebodyVal)        $.setdata(timebodyVal,`readtime_zq${$.idx>1?$.idx+'':''}`)
+    $.log(`${$.name} 获取阅读: 成功,readtime_zq${$.idx>1?$.idx+'':''}: ${timebodyVal}`)
     $.msg($.name, `获取阅读时长: 成功🎉`, ``)
   }
 else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/article\/red_packet/)) {
    const redpbodyVal = $request.body
-    if (redpbodyVal)        $.setdata(redpbodyVal, 'red_zq')
-    $.log(`${$.name} 获取惊喜红包: 成功,redpbodyVal: ${redpbodyVal}`)
+    if (redpbodyVal)        $.setdata(redpbodyVal, `red_zq${$.idx>1?$.idx+'':''}`)
+    $.log(`${$.name} 获取惊喜红包: 成功,red_zq${$.idx>1?$.idx+'':''}: ${redpbodyVal}`)
     $.msg($.name, `获取惊喜红包请求: 成功🎉`, ``)
   }
  }
@@ -517,6 +529,10 @@ function getAdVideo() {
 // 激励视频奖励
 function gameVideo() {
     return new Promise((resolve, reject) => {
+        if (!articlebodyVal) {
+            resolve();
+            return;
+        }
         const url = {
             url: `https://ios.baertt.com/v5/Game/GameVideoReward.json`,
             body: articlebodyVal,
@@ -536,6 +552,10 @@ function gameVideo() {
 }
 function comApp() {
     return new Promise((resolve, reject) => {
+        if (!articlebodyVal) {
+            resolve();
+            return;
+        }
         const url = {
             url: `https://ios.baertt.com/v5/mission/msgRed.json`,
             headers: {
@@ -560,6 +580,10 @@ function comApp() {
 //阅读奖励
 function readArticle() {
     return new Promise((resolve, reject) => {
+        if (!articlebodyVal) {
+            resolve();
+            return;
+        }
         const url = {
             url: `https://ios.baertt.com/v5/article/complete.json`,
             headers: {

@@ -156,13 +156,26 @@
         "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js"
     },
     {
-        "id": "kuaishou",
-        "name": "快手极速版",
-        "keys": ["cookie_ks"],
-        "author": "@sunert",
-        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
-        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"],
-        "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js"
+      "id": "kuaishou",
+      "name": "快手极速版",
+      "keys": ["cookie_ks", "cookie_ks2", "cookie_ks3", "cookie_ks4"],
+      "author": "@sunert",
+      "settings": [{
+        "id": "ksSuffix",
+        "name": "抓包账号",
+        "val": "1",
+        "type": "number",
+        "desc": "指定抓取的数据包用于哪个账号，设置数值如：1、2、3..."
+      }, {
+        "id": "ksCount",
+        "name": "账号个数",
+        "val": "1",
+        "type": "number",
+        "desc": "设置任务执行的账号总个数，根据抓包账号最大值设置，将执行所有账号任务"
+      }],
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"],
+      "script": "https://raw.githubusercontent.com/ztxtop/Sunert.Scripts/master/Task/kuaishou.js"
     },
     {
         "id": "sinanews",

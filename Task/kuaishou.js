@@ -47,6 +47,9 @@ http:\/\/uploads2\.gifshow\.com\/rest\/n\/system\/speed url script-request-heade
 */
 const logs = false   //日志开关
 const $ = new Env('快手视频')
+$.acIdx = ($.acIdx = ($.getval('ksSuffix') || '0') - 0) - 1 > 0 ? $.acIdx : 1; // 账号扩展字符
+$.acCount = ($.acCount = ($.getval('ksCount') || '0') - 0) - 1 > 0 ? $.acCount : 1; // 执行任务的账号个数
+$.oldName = $.name;
 let cookieArr = [];
 if ($.isNode()) {
   if (process.env.KS_TOKEN && process.env.KS_TOKEN.indexOf('&') > -1) {
@@ -60,12 +63,17 @@ if ($.isNode()) {
         }
       })
 } else {
-   cookieArr.push($.getdata('cookie_ks'))
+  for (let index = 0; index < $.acCount; index++) {
+    $.idx = index ? (index + 1 + '') : '';
+    cookieArr.push($.getdata(`cookie_ks${$.idx}`));
+  }
 }
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
+  $.name = $.oldName + $.acIdx;
    GetCookie();
+   $.name = $.oldName;
    $.done()
 } else {
 !(async() => {
@@ -82,6 +90,7 @@ if (isGetCookie) {
       cookieVal = cookieArr[i];
       $.index = i + 1;
       console.log(`-------------------------\n\n开始【快手视频账号${$.index}】`)
+      $.name = $.oldName + $.index;
      await speedSign();
      await speedSignifo();
      await speedInfo();
@@ -95,7 +104,10 @@ if (isGetCookie) {
  }
 })()
     .catch((e) => $.logErr(e))
-    .finally(() => $.done())
+    .finally(() => {
+      $.name = $.oldName;
+      $.done();
+    })
 }
 function  officialSign() {
    return new Promise((resolve, reject) => {

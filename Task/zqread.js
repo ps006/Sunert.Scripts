@@ -298,14 +298,13 @@ function execRead() {
                                                         // 视频数据，尝试前移
                                                         transfer(currNum, count, 1);
                                                     }
-                                                } else {
-                                                    // 前20个阅读领激励视频奖励,其实只能领15次
-                                                    if (currNum <= 20 && readScore >= 20) await gameVideo(dataBak);
                                                 }
-                                                $.log('', `😄【${currNum}/${count}】阅读任务获取青豆奖励：${readScore}`, '');
+                                                // 前20个阅读领激励视频奖励,其实只能领15次
+                                                if (currNum <= 20 && readScore >= 20) await gameVideo(dataBak);
+                                                $.log('', `😄【${currNum}/${count}】${obj.items['ctype']}阅读任务获取青豆奖励：${readScore}`, '');
                                             } else if (readScore == 0) {
                                                 if (readMode) {
-                                                    $.msg($.name + $.idx, '', `⚠️【${currNum}/${count}】阅读任务未获取到青豆奖励，移除当前阅读数据`);
+                                                    $.msg($.name + $.idx, '', `⚠️【${currNum}/${count}】${obj.items['ctype']}阅读任务未获取到青豆奖励，移除当前阅读数据`);
                                                     transfer(currNum, count, 0);
                                                 } else {
                                                     // 该阅读已达今日领取上限，根据情况决策是否设置下次执行任务的位置或时间
@@ -329,7 +328,7 @@ function execRead() {
                                                         nextTime.setMinutes(0);
                                                         $.setval((nextTime.getTime() + 24 * 60 * 60 * 1000) + '', nextExecReadTimeKey + $.idx);
                                                     } else {
-                                                        $.log('', `😒【${currNum}/${count}】阅读任务未获取到青豆奖励，进入下一个阅读任务`, '');
+                                                        $.log('', `😒【${currNum}/${count}】${obj.items['ctype']}阅读任务未获取到青豆奖励，进入下一个阅读任务`, '');
                                                     }
                                                 }
                                             } else {
